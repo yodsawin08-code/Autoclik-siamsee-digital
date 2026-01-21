@@ -22,11 +22,11 @@
 
     <script type="text/babel">
         // ----------------------------------------------------------------------
-        // ✅ อัปเดต URL ใหม่ล่าสุดของท่านแล้ว (ลงท้ายด้วย 8XwfA/exec)
+        // ✅ อัปเดตลิงก์ Web App ล่าสุดของท่าน (ลงท้าย OiS9nBA/exec)
         // ----------------------------------------------------------------------
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwBpY4ZTecEClqWavLmowTaRFpyMFUbdrGGd_kyT44KdY91fod32TCtsoo2qbBL_8XwfA/exec"; 
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyzKnFFqhc1OvMreo1D8nRrJknyrc0IvKHrD5YGqrs0CyLaCJqb5jlKFgu3anuOiS9nBA/exec"; 
         
-        // ⚠️ อย่าลืมใส่ API Key ตรงนี้นะครับ
+        // ⚠️ อย่าลืมใส่ Gemini API Key ตรงนี้นะครับ
         const GEMINI_API_KEY = ""; 
         
         const BRANCHES = [
@@ -60,9 +60,10 @@
             const [aiAnalysis, setAiAnalysis] = useState("");
             const [isAnalyzing, setIsAnalyzing] = useState(false);
             
+            // สร้าง Session ID เพื่อระบุตัวตน (ใช้สำหรับรวม Action ในชีท)
             const sessionId = useRef(Math.random().toString(36).substring(2, 15));
 
-            // --- ฟังก์ชันส่งข้อมูล (ใช้ no-cors + text/plain เพื่อความชัวร์) ---
+            // --- ฟังก์ชันส่งข้อมูล (รองรับการรวมบรรทัด) ---
             const saveToGoogleSheets = (actionType, fortune, aiText) => {
                 const dataToSend = {
                     sessionId: sessionId.current,
@@ -72,22 +73,18 @@
                     action: actionType 
                 };
 
-                // ส่งข้อมูล
                 fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
-                    mode: 'no-cors', // โหมดนี้จะไม่เห็น Response แต่ส่งข้อมูลไปถึงแน่นอน
+                    mode: 'no-cors',
                     headers: { 
                         'Content-Type': 'text/plain;charset=utf-8' 
                     },
                     body: JSON.stringify(dataToSend)
                 }).then(() => {
-                    console.log(`ส่งข้อมูลเรียบร้อย: ${actionType}`);
-                    // เนื่องจาก no-cors เราจะไม่รู้ว่า Server ตอบอะไรกลับมา
-                    // แต่ถ้า URL ถูกต้องและ deploy แบบ Anyone ข้อมูลจะเข้าครับ
+                    console.log(`บันทึกข้อมูล: ${actionType}`);
                 })
-                .catch(err => console.error("เกิดข้อผิดพลาดในการส่ง:", err));
+                .catch(err => console.error("เกิดข้อผิดพลาด:", err));
             };
-            // ------------------------------------------------
 
             const fetchAiContent = async (fortune) => {
                 if (!GEMINI_API_KEY) {
@@ -122,7 +119,7 @@
                     setSelectedFortune(randomFortune);
                     setStep('result');
                     const aiResult = await fetchAiContent(randomFortune);
-                    // บันทึกข้อมูลเมื่อเขย่าเสร็จ
+                    // บันทึก Action แรก: สุ่มคำทำนาย
                     saveToGoogleSheets("สุ่มคำทำนาย", randomFortune, aiResult);
                 }, 2000);
             };
@@ -135,7 +132,7 @@
             };
 
             const handleDownload = async () => {
-                // บันทึกข้อมูลเมื่อกดดาวน์โหลด
+                // บันทึก Action: ดาวน์โหลด (จะไปรวมบรรทัดเดิมในชีท)
                 saveToGoogleSheets("ดาวน์โหลดภาพ", selectedFortune, aiAnalysis);
 
                 try {
@@ -160,7 +157,7 @@
             };
 
             const handleNativeShare = async () => {
-                // บันทึกข้อมูลเมื่อกดแชร์
+                // บันทึก Action: แชร์ (จะไปรวมบรรทัดเดิมในชีท)
                 saveToGoogleSheets("แชร์ผ่าน Web Share", selectedFortune, aiAnalysis);
 
                 try {
