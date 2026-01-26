@@ -307,7 +307,8 @@
                                         <button 
                                             key={branch}
                                             onClick={() => handleBranchSelect(branch)}
-                                            className="w-full py-3 px-6 bg-white/10 hover:bg-yellow-500 hover:text-red-900 border border-yellow-500/30 rounded-2xl transition duration-300 font-bold text-lg active:scale-95 touch-manipulation leading-tight"
+                                            // ✅ เพิ่ม truncate ที่นี่ เพื่อบังคับบรรทัดเดียวและมี ... ถ้าล้น
+                                            className="w-full py-3 px-6 bg-white/10 hover:bg-yellow-500 hover:text-red-900 border border-yellow-500/30 rounded-2xl transition duration-300 font-bold text-lg active:scale-95 touch-manipulation leading-tight truncate"
                                         >
                                             {branch}
                                         </button>
@@ -392,7 +393,7 @@
                     </div>
                     
                     <div className="mt-1 text-[10px] text-red-400/60 text-center absolute bottom-0.5 pointer-events-none w-full">
-                        © 2026 Autoclik | Powered by Gemini & Google Sheets
+
                     </div>
                 </div>
             );
