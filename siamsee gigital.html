@@ -19,11 +19,13 @@
     <link rel="preload" as="image" href="9.png" fetchpriority="high">
     
     <script>
+        // *** บังคับโหลดรูปเข้า RAM ทันทีแบบ Parallel ***
         (function() {
-            // เพิ่ม Pok.png เข้าไปในรายการ Preload
             var images = ['Pok.png', 'logo.png', 'shake_item.png', '1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png', '9.png'];
             images.forEach(function(src) {
-                new Image().src = src;
+                var img = new Image();
+                img.src = src;
+                img.decoding = 'async'; // โหลดแบบไม่ขวางการทำงานหลัก
             });
         })();
     </script>
@@ -211,6 +213,8 @@
                 }
                 setIsShaking(true);
                 if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+                
+                // ⚡️ แก้ไขเวลาตรงนี้: จาก 2000 เหลือ 50 (0.05 วินาที) เร็วปรู๊ดปร๊าด
                 setTimeout(async () => {
                     setIsShaking(false);
                     const randomFortune = FORTUNES[Math.floor(Math.random() * FORTUNES.length)];
@@ -218,7 +222,7 @@
                     setStep('result');
                     const aiResult = await fetchAiContent(randomFortune);
                     saveToGoogleSheets("สุ่มคำทำนาย", randomFortune, aiResult);
-                }, 2000);
+                }, 50); 
             };
 
             const getImageFile = async () => {
@@ -242,11 +246,13 @@
                     link.download = file.name;
                     document.body.appendChild(link);
                     link.click();
+                    
+                    // ⚡️ ลดเวลาหน่วงปุ่มดาวน์โหลดเหลือ 0.5 วิ
                     setTimeout(() => {
                         document.body.removeChild(link);
                         window.URL.revokeObjectURL(url);
                         setIsProcessing(false);
-                    }, 2000); 
+                    }, 500); 
                 } catch (err) {
                     console.error("Download failed:", err);
                     setIsProcessing(false);
@@ -279,14 +285,13 @@
             };
 
             // ✅ RENDER SECTION
-            // ถ้าอยู่ในขั้นตอน Branch (หน้าแรก) ให้ใช้ Layout แบบ Cover Image
             if (step === 'branch') {
                 return (
                     <div 
                         className="h-[100dvh] w-full bg-cover bg-center bg-no-repeat flex flex-col justify-end items-center relative overflow-hidden"
                         style={{ backgroundImage: "url('Pok.png')" }}
                     >
-                        {/* Gradient Overlay เพื่อให้อ่านตัวหนังสือชัดขึ้น */}
+                        {/* Gradient Overlay */}
                         <div className="absolute inset-0 bg-gradient-to-t from-red-950/90 via-red-900/40 to-transparent pointer-events-none"></div>
 
                         <div className="z-10 w-full max-w-lg p-6 pb-8 flex flex-col gap-4 animate-fade-in relative">
@@ -321,7 +326,6 @@
                 );
             }
 
-            // ถ้าเป็นขั้นตอนอื่นๆ (Shake / Result) ให้ใช้ Layout เดิม (พื้นหลังแดง + กรอบ)
             return (
                 <div className="h-[100dvh] w-full flex flex-col items-center justify-center p-2 sm:p-4 text-white relative overflow-hidden bg-red-950">
                     
