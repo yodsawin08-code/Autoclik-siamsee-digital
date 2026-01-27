@@ -20,7 +20,6 @@
     
     <script>
         (function() {
-            // เพิ่ม Pok.png เข้าไปในรายการ Preload
             var images = ['Pok.png', 'logo.png', 'shake_item.png', '1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png', '9.png'];
             images.forEach(function(src) {
                 new Image().src = src;
@@ -286,18 +285,19 @@
                         className="h-[100dvh] w-full bg-cover bg-center bg-no-repeat flex flex-col justify-end items-center relative overflow-hidden"
                         style={{ backgroundImage: "url('Pok.png')" }}
                     >
-                        {/* ✅ เอา Gradient Overlay ออกแล้ว ตามที่ขอครับ */}
-                        
                         <div className="z-10 w-full max-w-lg p-6 pb-8 flex flex-col gap-4 animate-fade-in relative">
-                             <h2 className="text-xl text-center font-bold text-white drop-shadow-md">
-                                ท่านทราบข่าวกิจกรรมนี้จากที่ใด
-                             </h2>
+                             {/* ✅ เพิ่มกล่องพื้นหลังเน้นข้อความให้เด่น (ตามที่ขอ) */}
+                             <div className="bg-red-900/90 px-6 py-4 rounded-2xl border-2 border-yellow-500 shadow-2xl backdrop-blur-sm transform hover:scale-105 transition duration-300">
+                                 <h2 className="text-2xl text-center font-bold text-yellow-400 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
+                                    ท่านทราบข่าวกิจกรรมนี้จากที่ใด
+                                 </h2>
+                             </div>
 
                              <div className="relative w-full">
                                 <select
                                     value={selectedBranch}
                                     onChange={(e) => setSelectedBranch(e.target.value)}
-                                    className="w-full p-4 bg-white/90 border-2 border-yellow-500 rounded-2xl text-red-900 text-lg font-bold focus:outline-none focus:border-red-600 pl-4 pr-10 text-center truncate shadow-lg"
+                                    className="w-full p-4 bg-white/95 border-2 border-yellow-500 rounded-2xl text-red-900 text-lg font-bold focus:outline-none focus:border-red-600 pl-4 pr-10 text-center truncate shadow-xl"
                                 >
                                     <option value="" disabled>-- กรุณาเลือก --</option>
                                     {BRANCHES.map(branch => (
@@ -367,12 +367,13 @@
                         {step === 'result' && selectedFortune && (
                             <div className="text-center animate-fade-in w-full flex flex-col items-center justify-between h-full pb-1 overflow-hidden">
                                 
+                                {/* 🚀 4. ขยายรูปใบคำทำนายให้เต็มพื้นที่ */}
                                 <div className="relative flex-1 w-full flex items-center justify-center overflow-hidden min-h-0 mt-0 mb-1">
                                      <img 
                                         src={selectedFortune.image} 
                                         alt={selectedFortune.title} 
                                         loading="eager"
-                                        decoding="sync"
+                                        decoding="async"
                                         fetchpriority="high"
                                         className="h-full w-auto max-w-full object-contain rounded-2xl shadow-2xl border-2 border-yellow-500 relative z-20"
                                     />
