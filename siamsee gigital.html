@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Autoclik Chinese New Year 2026</title>
     
+    <link rel="preload" as="image" href="Pok.png" fetchpriority="high">
     <link rel="preload" as="image" href="logo.png" fetchpriority="high">
     <link rel="preload" as="image" href="shake_item.png" fetchpriority="high">
     <link rel="preload" as="image" href="1.png" fetchpriority="high">
@@ -19,7 +20,8 @@
     
     <script>
         (function() {
-            var images = ['logo.png', 'shake_item.png', '1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png', '9.png'];
+            // เพิ่ม Pok.png เข้าไปในรายการ Preload
+            var images = ['Pok.png', 'logo.png', 'shake_item.png', '1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png', '9.png'];
             images.forEach(function(src) {
                 new Image().src = src;
             });
@@ -37,7 +39,6 @@
         body { font-family: 'Sarabun', sans-serif; overscroll-behavior: none; }
         .shake-animation { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both infinite; }
         @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 20% { transform: translate(-3px, 0px) rotate(1deg); } 30% { transform: translate(3px, 2px) rotate(0deg); } 40% { transform: translate(1px, -1px) rotate(1deg); } 50% { transform: translate(-1px, 2px) rotate(-1deg); } 60% { transform: translate(-3px, 1px) rotate(0deg); } 70% { transform: translate(3px, 1px) rotate(-1deg); } 80% { transform: translate(-1px, -1px) rotate(1deg); } 90% { transform: translate(1px, 2px) rotate(0deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); } }
-        /* Style for Select Dropdown */
         select {
             -webkit-appearance: none;
             -moz-appearance: none;
@@ -58,7 +59,6 @@
         // ⚠️ อย่าลืมใส่ API Key
         const GEMINI_API_KEY = ""; 
         
-        // ✅ ปรับ Online ขึ้นบนสุด
         const BRANCHES = [
             "Online",
             "สาขาโลตัส อ่อนนุช 80",
@@ -187,7 +187,6 @@
                 }
             };
 
-            // ✅ เปลี่ยนฟังก์ชันจากกดปุ่มเลือก เป็นกดยืนยันแล้วค่อยเช็ค Permission
             const handleBranchConfirm = async () => {
                 if (!selectedBranch) return;
 
@@ -279,8 +278,52 @@
                 }
             };
 
+            // ✅ RENDER SECTION
+            // ถ้าอยู่ในขั้นตอน Branch (หน้าแรก) ให้ใช้ Layout แบบ Cover Image
+            if (step === 'branch') {
+                return (
+                    <div 
+                        className="h-[100dvh] w-full bg-cover bg-center bg-no-repeat flex flex-col justify-end items-center relative overflow-hidden"
+                        style={{ backgroundImage: "url('Pok.png')" }}
+                    >
+                        {/* Gradient Overlay เพื่อให้อ่านตัวหนังสือชัดขึ้น */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-red-950/90 via-red-900/40 to-transparent pointer-events-none"></div>
+
+                        <div className="z-10 w-full max-w-lg p-6 pb-8 flex flex-col gap-4 animate-fade-in relative">
+                             <h2 className="text-xl text-center font-bold text-white drop-shadow-md">
+                                ท่านทราบข่าวกิจกรรมนี้จากที่ใด
+                             </h2>
+
+                             <div className="relative w-full">
+                                <select
+                                    value={selectedBranch}
+                                    onChange={(e) => setSelectedBranch(e.target.value)}
+                                    className="w-full p-4 bg-white/90 border-2 border-yellow-500 rounded-2xl text-red-900 text-lg font-bold focus:outline-none focus:border-red-600 pl-4 pr-10 text-center truncate shadow-lg"
+                                >
+                                    <option value="" disabled>-- กรุณาเลือก --</option>
+                                    {BRANCHES.map(branch => (
+                                        <option key={branch} value={branch}>
+                                            {branch}
+                                        </option>
+                                    ))}
+                                </select>
+                             </div>
+
+                             <button
+                                onClick={handleBranchConfirm}
+                                disabled={!selectedBranch}
+                                className={`w-full py-4 bg-yellow-500 text-red-900 font-bold rounded-full text-xl shadow-xl border-2 border-yellow-300 transition transform ${!selectedBranch ? 'opacity-70 cursor-not-allowed grayscale' : 'hover:scale-105 active:scale-95'}`}
+                            >
+                                ยืนยัน
+                            </button>
+                        </div>
+                    </div>
+                );
+            }
+
+            // ถ้าเป็นขั้นตอนอื่นๆ (Shake / Result) ให้ใช้ Layout เดิม (พื้นหลังแดง + กรอบ)
             return (
-                <div className="h-[100dvh] w-full flex flex-col items-center justify-center p-2 sm:p-4 text-white relative overflow-hidden">
+                <div className="h-[100dvh] w-full flex flex-col items-center justify-center p-2 sm:p-4 text-white relative overflow-hidden bg-red-950">
                     
                     <div className="absolute inset-0 opacity-10 pointer-events-none flex justify-center items-center">
                         <span className="text-[15vh] font-bold text-yellow-500 rotate-90 md:rotate-0 whitespace-nowrap">AUTOCLIK</span>
@@ -288,44 +331,12 @@
 
                     <div className="z-10 w-full max-w-lg bg-red-900/80 backdrop-blur-md p-4 pt-6 pb-2 rounded-3xl border border-yellow-500 shadow-2xl flex flex-col justify-between h-full max-h-[98dvh]">
                         
-                        {step !== 'result' && (
-                            <div className="text-center mb-2 animate-fade-in flex-shrink-0">
-                                <img src="logo.png" alt="Autoclik" className="h-16 mx-auto mb-2 drop-shadow-lg" />
-                                <p className="text-red-200 text-lg leading-tight">Siamsee Dragon 2026</p>
-                            </div>
-                        )}
+                        <div className="text-center mb-2 animate-fade-in flex-shrink-0">
+                            <img src="logo.png" alt="Autoclik" className="h-16 mx-auto mb-2 drop-shadow-lg" />
+                            <p className="text-red-200 text-lg leading-tight">Siamsee Dragon 2026</p>
+                        </div>
 
-                        {step === 'branch' && (
-                            <div className="animate-fade-in w-full flex-grow flex flex-col justify-center">
-                                <h2 className="text-xl text-center mb-5 font-bold">เลือกสาขาที่ท่านใช้บริการ</h2>
-                                
-                                {/* ✅ เปลี่ยนเป็น Dropdown List */}
-                                <div className="relative w-full mb-6">
-                                    <select
-                                        value={selectedBranch}
-                                        onChange={(e) => setSelectedBranch(e.target.value)}
-                                        className="w-full p-4 bg-white/10 border border-yellow-500/50 rounded-2xl text-yellow-100 text-lg font-bold focus:outline-none focus:border-yellow-400 pl-4 pr-10 text-center truncate"
-                                    >
-                                        <option value="" disabled className="text-gray-400 bg-red-950">-- กรุณาเลือกสาขา --</option>
-                                        {BRANCHES.map(branch => (
-                                            <option key={branch} value={branch} className="text-white bg-red-900">
-                                                {branch}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-
-                                {/* ✅ ปุ่มยืนยัน (กดได้ต่อเมื่อเลือกสาขาแล้ว) */}
-                                <button
-                                    onClick={handleBranchConfirm}
-                                    disabled={!selectedBranch}
-                                    className={`w-full py-4 bg-yellow-500 text-red-900 font-bold rounded-full text-xl shadow-lg transition transform ${!selectedBranch ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 active:scale-95'}`}
-                                >
-                                    ยืนยัน
-                                </button>
-                            </div>
-                        )}
-
+                        {/* Step: Shake */}
                         {step === 'shake' && (
                             <div className="text-center flex-grow flex flex-col items-center justify-between py-2 overflow-hidden">
                                 <div className="flex-1 w-full flex items-center justify-center overflow-hidden relative my-2">
@@ -350,6 +361,7 @@
                             </div>
                         )}
 
+                        {/* Step: Result */}
                         {step === 'result' && selectedFortune && (
                             <div className="text-center animate-fade-in w-full flex flex-col items-center justify-between h-full pb-1 overflow-hidden">
                                 
