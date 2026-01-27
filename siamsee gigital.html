@@ -286,18 +286,19 @@
                         style={{ backgroundImage: "url('Pok.png')" }}
                     >
                         <div className="z-10 w-full max-w-lg p-6 pb-8 flex flex-col gap-4 animate-fade-in relative">
-                             {/* ✅ เพิ่มกล่องพื้นหลังเน้นข้อความให้เด่น (ตามที่ขอ) */}
-                             <div className="bg-red-900/90 px-6 py-4 rounded-2xl border-2 border-yellow-500 shadow-2xl backdrop-blur-sm transform hover:scale-105 transition duration-300">
-                                 <h2 className="text-2xl text-center font-bold text-yellow-400 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
-                                    ท่านทราบข่าวกิจกรรมนี้จากที่ใด
-                                 </h2>
-                             </div>
+                             {/* ✅ เพิ่ม Stroke ขอบดำให้ตัวหนังสือ */}
+                             <h2 
+                                className="text-3xl text-center font-bold text-white mb-2"
+                                style={{ textShadow: '2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000' }}
+                             >
+                                ท่านทราบข่าวกิจกรรมนี้จากที่ใด
+                             </h2>
 
                              <div className="relative w-full">
                                 <select
                                     value={selectedBranch}
                                     onChange={(e) => setSelectedBranch(e.target.value)}
-                                    className="w-full p-4 bg-white/95 border-2 border-yellow-500 rounded-2xl text-red-900 text-lg font-bold focus:outline-none focus:border-red-600 pl-4 pr-10 text-center truncate shadow-xl"
+                                    className="w-full p-4 bg-white/90 border-2 border-yellow-500 rounded-2xl text-red-900 text-lg font-bold focus:outline-none focus:border-red-600 pl-4 pr-10 text-center truncate shadow-lg"
                                 >
                                     <option value="" disabled>-- กรุณาเลือก --</option>
                                     {BRANCHES.map(branch => (
@@ -367,7 +368,6 @@
                         {step === 'result' && selectedFortune && (
                             <div className="text-center animate-fade-in w-full flex flex-col items-center justify-between h-full pb-1 overflow-hidden">
                                 
-                                {/* 🚀 4. ขยายรูปใบคำทำนายให้เต็มพื้นที่ */}
                                 <div className="relative flex-1 w-full flex items-center justify-center overflow-hidden min-h-0 mt-0 mb-1">
                                      <img 
                                         src={selectedFortune.image} 
