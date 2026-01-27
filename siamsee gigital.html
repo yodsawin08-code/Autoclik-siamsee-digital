@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Autoclik Chinese New Year 2026</title>
     
     <link rel="preload" as="image" href="Pok.webp" fetchpriority="high">
@@ -20,7 +20,6 @@
     
     <script>
         (function() {
-            // ✅ แก้ไขจุดที่ 2: เปลี่ยนในรายการ Preload Script เป็น Pok.webp
             var images = ['Pok.webp', 'logo.png', 'shake_item.png', '1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png', '9.png'];
             images.forEach(function(src) {
                 new Image().src = src;
@@ -293,14 +292,13 @@
             if (step === 'branch') {
                 return (
                     <div 
-                        className="h-[100dvh] w-full bg-cover bg-center bg-no-repeat flex flex-col justify-end items-center relative overflow-hidden"
-                        // ✅ แก้ไขจุดที่ 3: ใช้ Pok.webp ตามที่คุยกัน
+                        // ✅ แก้ไข: ใช้ bg-top แทน bg-center เพื่อให้ภาพติดขอบบนเสมอ (แก้ปัญหาหัวภาพขาดใน iOS)
+                        className="h-[100dvh] w-full bg-cover bg-top bg-no-repeat flex flex-col justify-end items-center relative overflow-hidden"
                         style={{ backgroundImage: "url('Pok.webp')" }}
                     >
                         <div className="z-10 w-full max-w-lg p-6 pb-8 flex flex-col gap-4 animate-fade-in relative">
-                             {/* ✅ ตัวหนังสือเด่น: ขอบดำ + บรรทัดเดียว */}
                              <h2 className="text-xl text-center font-bold text-white text-outline-black whitespace-nowrap">
-                                ท่านทราบข่าวกิจกรรมนี้จากที่ใด
+                                ท่านรู้จักกิจกรรมนี้จากที่ใด
                              </h2>
 
                              <div className="relative w-full">
@@ -426,7 +424,7 @@
                     </div>
                     
                     <div className="mt-1 text-[10px] text-red-400/60 text-center absolute bottom-0.5 pointer-events-none w-full">
-                        © 2026 Autoclik | Powered by Gemini & Google Sheets
+                        © 2026 Autoclik by ACG.
                     </div>
                 </div>
             );
