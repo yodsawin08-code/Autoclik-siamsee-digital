@@ -37,6 +37,16 @@
         body { font-family: 'Sarabun', sans-serif; overscroll-behavior: none; }
         .shake-animation { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both infinite; }
         @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 20% { transform: translate(-3px, 0px) rotate(1deg); } 30% { transform: translate(3px, 2px) rotate(0deg); } 40% { transform: translate(1px, -1px) rotate(1deg); } 50% { transform: translate(-1px, 2px) rotate(-1deg); } 60% { transform: translate(-3px, 1px) rotate(0deg); } 70% { transform: translate(3px, 1px) rotate(-1deg); } 80% { transform: translate(-1px, -1px) rotate(1deg); } 90% { transform: translate(1px, 2px) rotate(0deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); } }
+        /* Style for Select Dropdown */
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fbbf24' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
     </style>
 </head>
 <body class="bg-red-950">
@@ -48,7 +58,9 @@
         // ⚠️ อย่าลืมใส่ API Key
         const GEMINI_API_KEY = ""; 
         
+        // ✅ ปรับ Online ขึ้นบนสุด
         const BRANCHES = [
+            "Online",
             "สาขาโลตัส อ่อนนุช 80",
             "สาขาบิ๊กซี กัลปพฤกษ์",
             "สาขาบิ๊กซี มหาชัย 2",
@@ -63,11 +75,9 @@
             "สาขาโชตนา หน้าสนามกอล์ฟลานนา",
             "สาขาเทพกระษัตรี",
             "สาขาโรงเรียนสตรีภูเก็ต",
-            "สาขาแยกสี่กอ กะทู้ ภูเก็ต",
-            "Online"
+            "สาขาแยกสี่กอ กะทู้ ภูเก็ต"
         ];
 
-        // ✅ อัปเดตคำทำนายตามภาพที่ส่งมา (1-9)
         const FORTUNES = [
             { id: 1, title: 'มหาโชคลาภ', detail: 'เปรียบเสมือนตะวันขึ้นฟ้า ส่องสว่างไปทั่วทิศ กิจการที่ทำจะรุ่งเรือง ประสบความสำเร็จในสิ่งที่หวัง', image: '1.png' },
             { id: 2, title: 'ความพยายามนำไปสู่ผลสำเร็จ', detail: 'ช่วงแรกอาจเหนื่อยยากเหมือนเข็นครกขึ้นภูเขา แต่หากอดทนจะพบกับความสุขสมหวังในภายหลัง', image: '2.png' },
@@ -177,7 +187,10 @@
                 }
             };
 
-            const handleBranchSelect = async (branch) => {
+            // ✅ เปลี่ยนฟังก์ชันจากกดปุ่มเลือก เป็นกดยืนยันแล้วค่อยเช็ค Permission
+            const handleBranchConfirm = async () => {
+                if (!selectedBranch) return;
+
                 if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
                     try {
                         const permissionState = await DeviceMotionEvent.requestPermission();
@@ -189,8 +202,7 @@
                         console.error("iOS permission error:", e);
                     }
                 }
-                setSelectedBranch(branch);
-                branchRef.current = branch;
+                branchRef.current = selectedBranch;
                 setStep('shake');
             };
 
@@ -286,20 +298,31 @@
                         {step === 'branch' && (
                             <div className="animate-fade-in w-full flex-grow flex flex-col justify-center">
                                 <h2 className="text-xl text-center mb-5 font-bold">เลือกสาขาที่ท่านใช้บริการ</h2>
-                                <div className="space-y-3 overflow-y-auto max-h-[60vh] pr-2">
-                                    {BRANCHES.map(branch => {
-                                        const textSizeClass = branch.length > 25 ? 'text-xs' : (branch.length > 18 ? 'text-sm' : 'text-lg');
-                                        return (
-                                            <button 
-                                                key={branch}
-                                                onClick={() => handleBranchSelect(branch)}
-                                                className={`w-full py-3 px-2 bg-white/10 hover:bg-yellow-500 hover:text-red-900 border border-yellow-500/30 rounded-2xl transition duration-300 font-bold active:scale-95 touch-manipulation leading-tight whitespace-nowrap ${textSizeClass}`}
-                                            >
+                                
+                                {/* ✅ เปลี่ยนเป็น Dropdown List */}
+                                <div className="relative w-full mb-6">
+                                    <select
+                                        value={selectedBranch}
+                                        onChange={(e) => setSelectedBranch(e.target.value)}
+                                        className="w-full p-4 bg-white/10 border border-yellow-500/50 rounded-2xl text-yellow-100 text-lg font-bold focus:outline-none focus:border-yellow-400 pl-4 pr-10 text-center truncate"
+                                    >
+                                        <option value="" disabled className="text-gray-400 bg-red-950">-- กรุณาเลือกสาขา --</option>
+                                        {BRANCHES.map(branch => (
+                                            <option key={branch} value={branch} className="text-white bg-red-900">
                                                 {branch}
-                                            </button>
-                                        );
-                                    })}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
+
+                                {/* ✅ ปุ่มยืนยัน (กดได้ต่อเมื่อเลือกสาขาแล้ว) */}
+                                <button
+                                    onClick={handleBranchConfirm}
+                                    disabled={!selectedBranch}
+                                    className={`w-full py-4 bg-yellow-500 text-red-900 font-bold rounded-full text-xl shadow-lg transition transform ${!selectedBranch ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 active:scale-95'}`}
+                                >
+                                    ยืนยัน
+                                </button>
                             </div>
                         )}
 
@@ -379,7 +402,7 @@
                     </div>
                     
                     <div className="mt-1 text-[10px] text-red-400/60 text-center absolute bottom-0.5 pointer-events-none w-full">
-                        © 2026 Autoclik 
+                        © 2026 Autoclik | Powered by Gemini & Google Sheets
                     </div>
                 </div>
             );
@@ -390,4 +413,3 @@
     </script>
 </body>
 </html>
-
