@@ -20,6 +20,7 @@
     
     <script>
         (function() {
+            // เพิ่ม Pok.png เข้าไปในรายการ Preload
             var images = ['Pok.png', 'logo.png', 'shake_item.png', '1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png', '9.png'];
             images.forEach(function(src) {
                 new Image().src = src;
@@ -285,8 +286,8 @@
                         className="h-[100dvh] w-full bg-cover bg-center bg-no-repeat flex flex-col justify-end items-center relative overflow-hidden"
                         style={{ backgroundImage: "url('Pok.png')" }}
                     >
-                        <div className="absolute inset-0 bg-gradient-to-t from-red-950/90 via-red-900/40 to-transparent pointer-events-none"></div>
-
+                        {/* ✅ เอา Gradient Overlay ออกแล้ว ตามที่ขอครับ */}
+                        
                         <div className="z-10 w-full max-w-lg p-6 pb-8 flex flex-col gap-4 animate-fade-in relative">
                              <h2 className="text-xl text-center font-bold text-white drop-shadow-md">
                                 ท่านทราบข่าวกิจกรรมนี้จากที่ใด
