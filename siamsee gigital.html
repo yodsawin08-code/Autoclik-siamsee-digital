@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Autoclik Chinese New Year 2026</title>
     
     <link rel="preload" as="image" href="Pok.webp" fetchpriority="high">
@@ -27,9 +29,10 @@
         })();
     </script>
 
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
@@ -87,7 +90,6 @@
             "สาขาแยกสี่กอ กะทู้ ภูเก็ต"
         ];
 
-        // ✅ ตรวจสอบและแก้ไขให้ตรงกับภาพ 100%
         const FORTUNES = [
             { 
                 id: 1, 
@@ -343,7 +345,7 @@
                     >
                         <div className="z-10 w-full max-w-lg p-6 pb-8 flex flex-col gap-4 animate-fade-in relative">
                              <h2 className="text-xl text-center font-bold text-white text-outline-black whitespace-nowrap">
-                                ท่านทราบข่าวกิจกรรมนี้จากที่ใด
+                                ท่านรู้จักกิจกรรมนี้จากที่ใด
                              </h2>
 
                              <div className="relative w-full">
@@ -469,7 +471,7 @@
                     </div>
                     
                     <div className="mt-1 text-[10px] text-red-400/60 text-center absolute bottom-0.5 pointer-events-none w-full">
-                        © 2026 Autoclik | Powered by Gemini & Google Sheets
+                        © 2026 Autoclik by ACG.
                     </div>
                 </div>
             );
